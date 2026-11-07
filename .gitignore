@@ -1,0 +1,10 @@
+dist/
+node_modules/
+.DS_Store
+.netlify/
+*.zip
+output/
+__pycache__/
+.env
+.env.*
+!.env.example

@@ -74,8 +74,13 @@ Google sign-in and send a short Chat message. Signed-out users and invalid
 sessions are rejected by the AI backend before it contacts Groq.
 
 Core system tools remain available without signing in. Realtime Voice uses
-the existing LiveKit service/runtime; deploying the Chat function doesn't
-deploy that worker or install a native voice runtime.
+`/api/voice/session` with the same account verification. Set `LIVEKIT_URL`,
+`LIVEKIT_API_KEY` and `LIVEKIT_API_SECRET` in Netlify with Functions scope, then
+redeploy. `/api/ai/status` reports `voiceConfigured: true` when they are present.
+The 0.1.3 Debian installer includes the native voice runtime; no Python setup
+or LiveKit secret is required on users' computers. The existing cloud
+`astreis-transcriber` worker must remain deployed. It can take a few seconds
+to wake after inactivity.
 
 ## Future updates
 

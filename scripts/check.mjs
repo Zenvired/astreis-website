@@ -31,9 +31,9 @@ assert.equal(release.filename, filename);
 assert.equal(release.bytes, binary.length);
 assert.ok(html.includes('Version ' + release.version), 'Visible version must match the package');
 for (const match of html.matchAll(/downloads\/(Astreis_[^" ]+\.deb)/g)) assert.equal(match[1], filename, 'All download buttons must use the current package');
-assert.ok(binary.length < 25 * 1024 * 1024, 'Package stays below the common 25 MiB static-asset limit');
+assert.ok(binary.length < 50 * 1024 * 1024, 'Package stays below the 50 MiB release budget');
 for (const file of ['src/main.js', 'src/celestial.js', 'src/shaders.js', 'scripts/build.mjs', 'scripts/serve.mjs']) {
   execFileSync(process.execPath, ['--check', path.join(root, file)]);
 }
-assert.ok(!/https?:\/\//.test(html.replace('http://www.w3.org/2000/svg', '')), 'Page must not require external assets');
+assert.ok(!/<(?:script|img)[^>]+src="https?:/i.test(html), 'Scripts and images must remain local');
 console.log(`Passed: assets, links, scripts, and Astreis ${release.version} release metadata / SHA-256 (${binary.length} bytes).`);

@@ -91,6 +91,11 @@ try {
   await wait(700);
   assert.equal(await evaluate(`(()=>{let i=document.querySelector('#panel-monitor img');return Math.abs(i.clientWidth/i.clientHeight-16/9)<.02})()`), true, 'Real screenshots retain their aspect ratio');
   await screenshot('features-light');
+  assert.equal(await evaluate(`document.querySelector('.trailer-player iframe') === null`), true, 'YouTube loads only on request');
+  assert.equal(await evaluate(`!!document.querySelector('a[href="https://github.com/zenvired"]')`), true);
+  await evaluate(`document.getElementById('trailer').scrollIntoView()`);
+  await wait(700);
+  await screenshot('trailer-light');
   await evaluate(`document.getElementById('about').scrollIntoView()`);
   await wait(700);
   await screenshot('about-light');
@@ -139,6 +144,8 @@ try {
   assert.equal(createHash('sha256').update(Buffer.from(await download.arrayBuffer())).digest('hex'), releaseHash, 'The HTTP download must be the current release');
   assert.deepEqual(errors, [], 'No JavaScript runtime errors');
   assert.deepEqual(failures, [], 'No failed network requests');
+  await evaluate(`document.querySelector('.trailer-play').click()`);
+  assert.equal(await evaluate(`document.querySelector('.trailer-player iframe').src`), 'https://www.youtube-nocookie.com/embed/domnL69Yfew?autoplay=1&rel=0');
   await writeFile(path.join(output, 'qa.json'), JSON.stringify({ passed: true, checks: ['both WebGL shaders','visible sun and black-hole animation','320/390/768/1024/1440px overflow','screenshot proportions','six feature tabs','keyboard tabs','light/dark theme','pause/play','mobile menu','FAQ','reduced motion','complete .deb download'], errors, failures }, null, 2));
   console.log('Browser checks passed. Desktop/mobile screenshots saved in output/.');
 } finally {

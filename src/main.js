@@ -55,7 +55,7 @@ if ('IntersectionObserver' in window && !revealMotion.matches) {
       entry.target.classList.add('is-visible'); observer.unobserve(entry.target);
     }
   }, { threshold: .08 });
-  document.querySelectorAll('.section-heading, .profile-grid article, .about-copy, .care-strip>div, .download-copy, .install-panel').forEach(element => {
+  document.querySelectorAll('.section-heading, .profile-grid article, .about-copy, .care-strip>div, .download-copy, .install-panel, .trailer-player').forEach(element => {
     element.classList.add('reveal-target'); observer.observe(element);
   });
   root.classList.add('enhanced-motion');
@@ -153,3 +153,16 @@ document.querySelectorAll('[data-copy]').forEach(button => button.addEventListen
     toast('Command selected. Press Ctrl+C or ⌘C to copy.');
   }
 }));
+
+// Load YouTube only after an explicit play action.
+const trailerPlay = document.querySelector('.trailer-play');
+trailerPlay?.addEventListener('click', () => {
+  const frame = document.createElement('iframe');
+  frame.src = 'https://www.youtube-nocookie.com/embed/domnL69Yfew?autoplay=1&rel=0';
+  frame.title = 'Astreis official trailer';
+  frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+  frame.allowFullscreen = true;
+  frame.referrerPolicy = 'strict-origin-when-cross-origin';
+  trailerPlay.replaceWith(frame);
+  frame.focus();
+});

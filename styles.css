@@ -85,3 +85,16 @@
 .enhanced-motion .reveal-target{opacity:0;transform:translateY(18px);transition:opacity .65s ease,transform .65s var(--ease)}
 .enhanced-motion .reveal-target.is-visible{opacity:1;transform:translateY(0)}
 @media(prefers-reduced-motion:reduce){.enhanced-motion .reveal-target{opacity:1;transform:none}}
+
+/* A quiet entrance, with the trailer loading only when requested. */
+.trailer-player{position:relative;aspect-ratio:16/9;background:#080d17;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 24px 65px #00000012}
+.trailer-player iframe,.trailer-play{display:block;width:100%;height:100%;border:0}
+.trailer-play{position:relative;padding:0;background:#080d17;color:white;cursor:pointer;overflow:hidden}
+.trailer-play img{width:100%;height:100%;object-fit:cover;opacity:.65;transition:transform .8s var(--ease),opacity .5s}
+.trailer-play:hover img{transform:scale(1.025);opacity:.8}
+.trailer-play-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:16px;font-size:clamp(16px,2vw,24px);font-weight:500;text-shadow:0 2px 20px #000}
+.trailer-play-label>span{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:#ffffff20;border:1px solid #ffffff60;backdrop-filter:blur(14px);transition:transform .35s var(--ease)}
+.trailer-play:hover .trailer-play-label>span{transform:scale(1.1)}
+.text-link{font-size:13px;color:var(--muted)}.text-link:hover,.footer-note a:hover{color:var(--accent)}
+@media(prefers-reduced-motion:no-preference){.feature-panel:not([hidden]){animation:panel-arrive .45s var(--ease) both}.profile-grid article{transition:transform .35s var(--ease),border-color .35s}.profile-grid article:hover{transform:translateY(-5px);border-color:var(--accent)}@keyframes panel-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}}
+@media(prefers-reduced-motion:reduce){.trailer-play img,.trailer-play-label>span{transition:none}.trailer-play:hover img,.trailer-play:hover .trailer-play-label>span{transform:none}}
