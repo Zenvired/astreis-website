@@ -7,4 +7,4 @@
 
 /downloads/*.deb
   Content-Type: application/vnd.debian.binary-package
-  Content-Disposition: attachment; filename="Astreis_0.1.2_amd64.deb"
+  Content-Disposition: attachment; filename="Astreis_0.1.3_amd64.deb"

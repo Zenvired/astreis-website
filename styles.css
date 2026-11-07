@@ -98,3 +98,5 @@
 .text-link{font-size:13px;color:var(--muted)}.text-link:hover,.footer-note a:hover{color:var(--accent)}
 @media(prefers-reduced-motion:no-preference){.feature-panel:not([hidden]){animation:panel-arrive .45s var(--ease) both}.profile-grid article{transition:transform .35s var(--ease),border-color .35s}.profile-grid article:hover{transform:translateY(-5px);border-color:var(--accent)}@keyframes panel-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}}
 @media(prefers-reduced-motion:reduce){.trailer-play img,.trailer-play-label>span{transition:none}.trailer-play:hover img,.trailer-play:hover .trailer-play-label>span{transform:none}}
+
+.maker-credit{display:block;margin-top:9px;font-size:9px;letter-spacing:.025em;color:var(--muted);opacity:.75}
