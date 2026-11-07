@@ -1,0 +1,22 @@
+ASTREIS 0.1.2
+
+64-bit Zorin OS 18 / Ubuntu 24.04 and compatible systems with libc6 >= 2.39.
+
+Open Astreis_0.1.2_amd64.deb with your software manager and choose Install.
+Alternatively, open a terminal in this folder and run:
+
+  sudo apt install ./Astreis_0.1.2_amd64.deb
+
+The package manager installs required dependencies. Internet access may be
+needed for missing packages. Astreis appears in your application menu.
+
+Verify the download:
+  sha256sum -c SHA256SUMS
+
+Remove Astreis:
+  sudo apt remove astreis
+
+Personal settings remain in your user profile. Removing Astreis does not
+reverse system changes you explicitly applied inside the application.
+AI chat and realtime voice require their external service configuration.
+No developer API credentials or paid-license enforcement are included.
