@@ -32,7 +32,7 @@ assert.equal(release.bytes, binary.length);
 assert.ok(html.includes('Version ' + release.version), 'Visible version must match the package');
 for (const match of html.matchAll(/downloads\/(Astreis_[^" ]+\.deb)/g)) assert.equal(match[1], filename, 'All download buttons must use the current package');
 assert.ok(binary.length < 50 * 1024 * 1024, 'Package stays below the 50 MiB release budget');
-for (const file of ['src/main.js', 'src/celestial.js', 'src/shaders.js', 'scripts/build.mjs', 'scripts/serve.mjs']) {
+for (const file of ['src/main.js', 'src/site-theme.js', 'src/celestial.js', 'src/shaders.js', 'scripts/build.mjs', 'scripts/serve.mjs']) {
   execFileSync(process.execPath, ['--check', path.join(root, file)]);
 }
 assert.ok(!/<(?:script|img)[^>]+src="https?:/i.test(html), 'Scripts and images must remain local');

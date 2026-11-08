@@ -22,4 +22,4 @@
   for = "/downloads/*.deb"
   [headers.values]
     Content-Type = "application/vnd.debian.binary-package"
-    Content-Disposition = "attachment; filename=\"Astreis_0.1.3_amd64.deb\""
+    Content-Disposition = "attachment; filename=\"Astreis_0.1.4_amd64.deb\""

@@ -1,19 +1,16 @@
 import { CelestialScene } from './celestial.js';
+import { applySiteTheme, initialTheme } from './site-theme.js';
 
 const root = document.documentElement;
 const themeButton = document.querySelector('.theme-toggle');
-const metaTheme = document.querySelector('meta[name="theme-color"]');
-let theme = 'light';
-try { if (localStorage.getItem('astreis-theme') === 'dark') theme = 'dark'; } catch { /* Light is the default. */ }
-root.dataset.theme = theme;
+let theme = initialTheme;
 const scene = new CelestialScene(document.querySelector('.celestial-scene'));
 
 function syncTheme() {
   const dark = theme === 'dark';
-  root.dataset.theme = theme;
+  applySiteTheme(theme);
   themeButton.setAttribute('aria-pressed', String(dark));
   themeButton.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`);
-  metaTheme.content = dark ? '#050912' : '#faf7f2';
   document.querySelector('.theme-name').textContent = dark ? 'ORBIT' : 'SOLAR';
   document.querySelector('.app-preview-label').textContent = `Astreis · ${dark ? 'Dark' : 'Light'} mode`;
   const lightShot = document.querySelector('.home-light'), darkShot = document.querySelector('.home-dark');

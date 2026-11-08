@@ -7,9 +7,10 @@ copied into this standalone project, so the deployed site needs no parent folder
 | --- | --- |
 | `assets/sun.png` | `Astreis/src/assets/backgrounds/solar-pearl.png` |
 | `assets/black-hole.png` | `Astreis/src/assets/backgrounds/orbit-blue.png` |
-| `assets/logo-light.png` | `Astreis/src/assets/icons/astreis-light-gold.png` |
-| `assets/logo-dark.png` | `Astreis/src/assets/icons/Icon.png` |
-| `assets/favicon.png` | `Astreis/src-tauri/icons/32x32.png` |
+| `assets/logo-light.png` | `Astreis_Icons/astreis-sun.png` |
+| `assets/logo-dark.png` | `Astreis_Icons/astreis-black-hole.png` |
+| `assets/favicon.png` | `Astreis_Icons/astreis-sun.png`, resized to 32×32 |
+| `assets/favicon-dark.png` | `Astreis_Icons/astreis-black-hole.png`, resized to 32×32 |
 | `assets/fonts/geist.woff2` | `Astreis_Trailer/assets/graphics/fonts/Geist-latin-variable.woff2` |
 | `assets/fonts/LICENSE.txt` | The existing bundled Geist font license |
 | `assets/screenshots/home-light.webp` | `Astreis_Trailer/renders/energetic_sample/source_home.png`, a native capture |
@@ -27,6 +28,6 @@ readings, working voice-session demonstration, testimonial, or stock photograph
 is used. The original application and trailer assets are preserved.
 
 The package SHA-256 is
-`2d6eb64a7289c028eac8718c9f46b18102c3a1f2df9cec1b2ccd249312cae89b`.
+`10217bda6a06275eab65037b6fe5476105add6db7e7494755dc3b99e4509790d`.
 The website uses your existing product assets; it assigns no new license to
 the application or its artwork. The existing font license is included.
