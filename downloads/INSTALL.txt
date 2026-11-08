@@ -1,11 +1,11 @@
-ASTREIS 0.1.4
+ASTREIS 0.1.5
 
 64-bit Zorin OS 18 / Ubuntu 24.04 and compatible systems with libc6 >= 2.39.
 
-Open Astreis_0.1.4_amd64.deb with your software manager and choose Install.
+Open Astreis_0.1.5_amd64.deb with your software manager and choose Install.
 Alternatively, open a terminal in this folder and run:
 
-  sudo apt install ./Astreis_0.1.4_amd64.deb
+  sudo apt install ./Astreis_0.1.5_amd64.deb
 
 The package manager installs required dependencies. Internet access may be
 needed for missing packages. Astreis appears in your application menu.

@@ -28,6 +28,6 @@ readings, working voice-session demonstration, testimonial, or stock photograph
 is used. The original application and trailer assets are preserved.
 
 The package SHA-256 is
-`10217bda6a06275eab65037b6fe5476105add6db7e7494755dc3b99e4509790d`.
+`55e117eda95b9fd486e94065c1fdb8e578124a294f2f30d87c5118b76a9163a3`.
 The website uses your existing product assets; it assigns no new license to
 the application or its artwork. The existing font license is included.
