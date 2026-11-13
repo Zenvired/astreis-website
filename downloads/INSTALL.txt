@@ -19,10 +19,15 @@ to the host hardware, user files, package manager, and system settings.
 Verify the website downloads:
   sha256sum --ignore-missing -c SHA256SUMS
 
-Remove Astreis:
+Uninstall the Debian package:
   sudo apt remove astreis
 
-Personal settings remain in your user profile. Removing Astreis does not
-reverse system changes you explicitly applied inside the application.
+Uninstall the Flatpak bundle installed for your user:
+  flatpak uninstall --user com.zenvire.astreis
+
+To remove the Flatpak and its saved settings and data:
+  flatpak uninstall --user --delete-data com.zenvire.astreis
+
+System changes you applied through Astreis persist after uninstalling.
 AI chat and realtime voice require their external service configuration.
 No developer API credentials or paid-license enforcement are included.

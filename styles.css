@@ -102,3 +102,22 @@
 .maker-credit{display:block;margin-top:9px;font-size:9px;letter-spacing:.025em;color:var(--muted);opacity:.75}
 
 .flatpak-download{margin:18px 0 24px}.flatpak-download .button{border:1px solid var(--line);color:var(--ink)}.flatpak-download .button:hover{border-color:var(--accent)}.install-panel .install-command+.install-command{margin-top:24px}.install-command code{overflow-wrap:anywhere}
+
+html {
+  background-color: var(--paper);
+  scrollbar-color: #a89472 var(--paper);
+}
+:root[data-theme="dark"] {
+  scrollbar-color: #4d758a var(--paper);
+}
+@supports not (scrollbar-color: auto) {
+  html::-webkit-scrollbar { width: 12px; }
+  html::-webkit-scrollbar-track { background: var(--paper); }
+  html::-webkit-scrollbar-thumb {
+    background-color: #a89472;
+    border: 3px solid var(--paper);
+    border-radius: 999px;
+  }
+  :root[data-theme="dark"]::-webkit-scrollbar-thumb { background-color: #4d758a; }
+}
+.uninstall code { overflow-wrap: anywhere; }
