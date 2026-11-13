@@ -1,6 +1,11 @@
 {
-  "version": "0.1.5",
-  "filename": "Astreis_0.1.5_amd64.deb",
-  "bytes": 46556900,
-  "sha256": "55e117eda95b9fd486e94065c1fdb8e578124a294f2f30d87c5118b76a9163a3"
+  "version": "0.1.6",
+  "filename": "Astreis_0.1.6_amd64.deb",
+  "bytes": 46545020,
+  "sha256": "b2766bf842419e50db0f62210cb1b905d853121a4359bdf7cd4204e769c80d50",
+  "flatpak": {
+    "filename": "Astreis_0.1.6_x86_64.flatpak",
+    "bytes": 41544304,
+    "sha256": "64fbb5f787f4ea93d60b0e04a806914e997e05b5dbf4a7babd266ddbe54b91bb"
+  }
 }

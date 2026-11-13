@@ -92,7 +92,7 @@ try {
   assert.equal(await evaluate(`(()=>{let i=document.querySelector('#panel-monitor img');return Math.abs(i.clientWidth/i.clientHeight-16/9)<.02})()`), true, 'Real screenshots retain their aspect ratio');
   await screenshot('features-light');
   assert.equal(await evaluate(`document.querySelector('.trailer-player iframe') === null`), true, 'YouTube loads only on request');
-  assert.equal(await evaluate(`!!document.querySelector('a[href="https://github.com/zenvired"]')`), true);
+  assert.equal(await evaluate(`!!document.querySelector('a[href="https://github.com/Zenvired/astreis-releases"]')`), true);
   await evaluate(`document.getElementById('trailer').scrollIntoView()`);
   await wait(700);
   await screenshot('trailer-light');

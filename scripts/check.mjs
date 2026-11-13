@@ -9,7 +9,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const html = await readFile(path.join(root, 'index.html'), 'utf8');
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(ids).size, ids.length, 'HTML ids must be unique');
-for (const match of html.matchAll(/\b(?:src|href)="([^"#][^"]*)"/g)) {
+for (const match of html.matchAll(/\b(?:src|href|data-dark-src)="([^"#][^"]*)"/g)) {
   const url = match[1];
   if (!/^(?:https?:|data:|mailto:)/.test(url)) await access(path.join(root, url.split('#')[0]));
 }
@@ -31,6 +31,16 @@ assert.equal(release.filename, filename);
 assert.equal(release.bytes, binary.length);
 assert.ok(html.includes('Version ' + release.version), 'Visible version must match the package');
 for (const match of html.matchAll(/downloads\/(Astreis_[^" ]+\.deb)/g)) assert.equal(match[1], filename, 'All download buttons must use the current package');
+for (const [hash, name] of sums.trim().split('\n').map(line => line.trim().split(/\s+/))) {
+  const artifact = name === filename ? release : release.flatpak;
+  const bytes = await readFile(path.join(root, 'downloads', name));
+  assert.equal(name, artifact.filename);
+  assert.equal(hash, artifact.sha256);
+  assert.equal(bytes.length, artifact.bytes);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'), hash);
+  assert.ok(html.includes(hash));
+  assert.ok(html.includes('downloads/' + name));
+}
 assert.ok(binary.length < 50 * 1024 * 1024, 'Package stays below the 50 MiB release budget');
 for (const file of ['src/main.js', 'src/site-theme.js', 'src/celestial.js', 'src/shaders.js', 'scripts/build.mjs', 'scripts/serve.mjs']) {
   execFileSync(process.execPath, ['--check', path.join(root, file)]);

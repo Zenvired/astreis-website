@@ -25,14 +25,16 @@ try {
   });
   const html = await (await fetch(url)).text();
   assert.ok(html.includes('Version ' + release.version));
-  assert.ok(html.includes('downloads/' + release.filename));
-  const response = await fetch(url + '/downloads/' + release.filename);
-  assert.equal(response.status, 200);
-  assert.ok(response.headers.get('content-disposition').includes(release.filename));
-  const binary = Buffer.from(await response.arrayBuffer());
-  assert.equal(binary.length, release.bytes);
-  assert.equal(createHash('sha256').update(binary).digest('hex'), release.sha256);
-  console.log(`Verified actual HTTP download: Astreis ${release.version}, ${release.bytes} bytes, matching SHA-256.`);
+  for (const artifact of [release, release.flatpak].filter(Boolean)) {
+    assert.ok(html.includes('downloads/' + artifact.filename));
+    const response = await fetch(url + '/downloads/' + artifact.filename);
+    assert.equal(response.status, 200);
+    assert.ok(response.headers.get('content-disposition').includes(artifact.filename));
+    const binary = Buffer.from(await response.arrayBuffer());
+    assert.equal(binary.length, artifact.bytes);
+    assert.equal(createHash('sha256').update(binary).digest('hex'), artifact.sha256);
+    console.log(`Verified HTTP download: ${artifact.filename}, ${artifact.bytes} bytes, matching SHA-256.`);
+  }
 } finally {
   if (server.exitCode === null) {
     const exited = once(server, 'exit');

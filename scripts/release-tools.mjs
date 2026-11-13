@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdtemp, rm, rename } from 'node:fs/promises';
+import { readdir, readFile, writeFile, mkdtemp, rm, rename } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { createHash } from 'node:crypto';
@@ -44,17 +44,33 @@ export async function refreshRelease(site, filename) {
   const sha256 = createHash('sha256').update(binary).digest('hex');
   const size = (binary.byteLength / 1024 / 1024).toFixed(1) + ' MiB';
   const release = { version, filename, bytes: binary.byteLength, sha256 };
+  const flatpakName = `Astreis_${version}_x86_64.flatpak`;
+  if ((await readdir(path.join(site, 'downloads'))).includes(flatpakName)) {
+    const flatpak = await readFile(path.join(site, 'downloads', flatpakName));
+    release.flatpak = {
+      filename: flatpakName,
+      bytes: flatpak.byteLength,
+      sha256: createHash('sha256').update(flatpak).digest('hex'),
+    };
+  }
   await writeFile(path.join(site, 'downloads/release.json'), JSON.stringify(release, null, 2) + '\n');
-  await writeFile(path.join(site, 'downloads/SHA256SUMS'), `${sha256}  ${filename}\n`);
+  await writeFile(path.join(site, 'downloads/SHA256SUMS'), [release, release.flatpak].filter(Boolean).map(item => `${item.sha256}  ${item.filename}\n`).join(''));
   for (const name of ['index.html', 'netlify.toml', '_headers', 'README.md', 'ASSETS.md', 'SHARED-AI.md']) {
     const p = path.join(site, name);
     let text = await readFile(p, 'utf8');
     text = text.replace(/Astreis_\d+\.\d+\.\d+_amd64\.deb/g, filename);
+    if (release.flatpak) {
+      text = text.replace(/Astreis_\d+\.\d+\.\d+_x86_64\.flatpak/g, flatpakName);
+    }
     if (name === 'index.html') {
       text = text.replace(/>v\d+\.\d+\.\d+ /g, `>v${version} `)
         .replace(/Version \d+\.\d+\.\d+/g, `Version ${version}`)
-        .replace(/\d+\.\d+ MiB/g, size)
+        .replace(/(<p class="download-caption">Version [^<]*<span>·<\/span> )\d+\.\d+ MiB/g, `$1${size}`)
         .replace(/(<code class="hash">)[a-f0-9]{64}/g, `$1${sha256}`);
+    }
+    if (name === 'index.html' && release.flatpak) {
+      text = text.replace(/(data-flatpak-size>)\d+\.\d+ MiB/, `$1${(release.flatpak.bytes / 1024 / 1024).toFixed(1)} MiB`)
+        .replace(/(data-flatpak-hash>)[a-f0-9]{64}/, `$1${release.flatpak.sha256}`);
     }
     if (name === 'ASSETS.md') text = text.replace(/`[a-f0-9]{64}`/g, '`' + sha256 + '`');
     await writeFile(p, text);

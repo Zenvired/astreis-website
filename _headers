@@ -7,4 +7,8 @@
 
 /downloads/*.deb
   Content-Type: application/vnd.debian.binary-package
-  Content-Disposition: attachment; filename="Astreis_0.1.5_amd64.deb"
+  Content-Disposition: attachment; filename="Astreis_0.1.6_amd64.deb"
+
+/downloads/*.flatpak
+  Content-Type: application/vnd.flatpak
+  Content-Disposition: attachment; filename="Astreis_0.1.6_x86_64.flatpak"

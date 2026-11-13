@@ -7,14 +7,20 @@ import { refreshRelease } from './release-tools.mjs';
 
 const site = fileURLToPath(new URL('../', import.meta.url));
 const app = path.resolve(site, '../Astreis');
-const [expectedHash, filename] = (await readFile(path.join(app, 'release/SHA256SUMS'), 'utf8')).trim().split(/\s+/);
-if (!/^Astreis_\d+\.\d+\.\d+_amd64\.deb$/.test(filename)) throw new Error('Unexpected release package.');
-const actualHash = createHash('sha256').update(await readFile(path.join(app, 'release', filename))).digest('hex');
-if (actualHash !== expectedHash) throw new Error('The app release does not match its checksum; the website was not changed.');
-for (const name of [filename, 'SHA256SUMS', 'INSTALL.txt']) await cp(path.join(app, 'release', name), path.join(site, 'downloads', name));
+const checksums = new Map((await readFile(path.join(app, 'release/SHA256SUMS'), 'utf8'))
+  .trim().split('\n').map(line => line.trim().split(/\s+/).reverse()));
+const filename = [...checksums.keys()].find(name => /^Astreis_\d+\.\d+\.\d+_amd64\.deb$/.test(name));
+if (!filename) throw new Error('Missing Debian release checksum.');
+const flatpak = filename.replace('_amd64.deb', '_x86_64.flatpak');
+for (const name of [filename, flatpak]) {
+  const binary = await readFile(path.join(app, 'release', name));
+  const hash = createHash('sha256').update(binary).digest('hex');
+  if (checksums.get(name) !== hash) throw new Error(`Release checksum mismatch for ${name}.`);
+}
+for (const name of [filename, flatpak, 'INSTALL.txt']) await cp(path.join(app, 'release', name), path.join(site, 'downloads', name));
 const release = await refreshRelease(site, filename);
 for (const name of await readdir(path.join(site, 'downloads'))) {
-  if (/^Astreis_.*\.deb$/.test(name) && name !== filename) await rm(path.join(site, 'downloads', name));
+  if (/^Astreis_.*\.(deb|flatpak)$/.test(name) && name !== filename && name !== flatpak) await rm(path.join(site, 'downloads', name));
 }
 execFileSync(process.execPath, ['scripts/check.mjs'], { cwd: site, stdio: 'inherit' });
 execFileSync(process.execPath, ['scripts/build.mjs'], { cwd: site, stdio: 'inherit' });

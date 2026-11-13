@@ -1,17 +1,23 @@
-ASTREIS 0.1.5
+ASTREIS 0.1.6
 
 64-bit Zorin OS 18 / Ubuntu 24.04 and compatible systems with libc6 >= 2.39.
 
-Open Astreis_0.1.5_amd64.deb with your software manager and choose Install.
+Open Astreis_0.1.6_amd64.deb with your software manager and choose Install.
 Alternatively, open a terminal in this folder and run:
 
-  sudo apt install ./Astreis_0.1.5_amd64.deb
+  sudo apt install ./Astreis_0.1.6_amd64.deb
 
 The package manager installs required dependencies. Internet access may be
 needed for missing packages. Astreis appears in your application menu.
 
-Verify the download:
-  sha256sum -c SHA256SUMS
+Flatpak for x86-64 Linux:
+  flatpak install --user ./Astreis_0.1.6_x86_64.flatpak
+
+The bundle uses the GNOME 50 runtime from Flathub. Flatpak limits access
+to the host hardware, user files, package manager, and system settings.
+
+Verify the website downloads:
+  sha256sum --ignore-missing -c SHA256SUMS
 
 Remove Astreis:
   sudo apt remove astreis

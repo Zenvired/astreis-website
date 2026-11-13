@@ -4,6 +4,9 @@ import { applySiteTheme, initialTheme } from './site-theme.js';
 const root = document.documentElement;
 const themeButton = document.querySelector('.theme-toggle');
 let theme = initialTheme;
+const themedScreenshots = [...document.querySelectorAll('img[data-dark-src]')].map(image => ({
+  image, light: image.getAttribute('src'), dark: image.dataset.darkSrc,
+}));
 const scene = new CelestialScene(document.querySelector('.celestial-scene'));
 
 function syncTheme() {
@@ -17,6 +20,7 @@ function syncTheme() {
   lightShot.setAttribute('aria-hidden', String(dark));
   darkShot.setAttribute('aria-hidden', String(!dark));
   darkShot.alt = dark ? 'The native Astreis Home screen in dark mode with its blue black hole, current profile and live hardware readings.' : '';
+  for (const shot of themedScreenshots) shot.image.src = shot[theme];
   scene.setTheme(theme);
 }
 syncTheme();

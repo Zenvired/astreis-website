@@ -4,12 +4,12 @@ For step-by-step publishing instructions, read [DEPLOY.md](DEPLOY.md).
 
 The immersive Astreis landing page, with light/dark themes, the app's animated
 sun and black-hole materials, native screenshots, feature explorer, About,
-requirements, installation instructions, FAQ, and the actual Linux download.
+requirements, installation instructions, FAQ, and Debian and Flatpak downloads.
 
 The page uses plain HTML, CSS and JavaScript with no runtime dependencies.
 The source also includes an optional server-only Netlify function for shared
 desktop Chat. It is separate from the static page. See [SHARED-AI.md](SHARED-AI.md)
-for deployment and the desktop release build; that service is not live yet.
+for deployment and the desktop release build.
 
 ## Preview locally
 
@@ -67,7 +67,7 @@ and [build configuration](https://docs.netlify.com/build/configure-builds/overvi
 - `src/celestial.js` — the standalone, low-power WebGL renderer.
 - `src/shaders.js` — the actual Astreis solar and orbit shader materials.
 - `assets/` — local artwork, logos, font, and genuine native app captures.
-- `downloads/` — the release `.deb`, `INSTALL.txt`, and current `SHA256SUMS`.
+- `downloads/` — the Debian and Flatpak installers, `INSTALL.txt`, and `SHA256SUMS`.
 - `_headers` — static-host response headers, included with manual deploys.
 - `netlify.toml` — Netlify build and response-header configuration.
 - `netlify/functions/ai-chat.mjs` — shared streaming Chat endpoint and rate rule.
@@ -75,11 +75,11 @@ and [build configuration](https://docs.netlify.com/build/configure-builds/overvi
 - `SHARED-AI.md` — owner setup and shared desktop release instructions.
 
 Build a desktop release with `npm run build:deb` in the sibling `Astreis/`
-folder. This automatically synchronizes the package, checksum, release version,
+folder. This automatically synchronizes both packages, checksums, release version,
 size, install commands, headers, `dist/`, and delivery ZIPs. To repeat just that
 synchronization here, use `npm run sync:release`.
 
-On Netlify, the build also configures the package with the site's main public
+On Netlify, the build also configures the Debian package with the site's main public
 URL, so users don't need a separate API address. `GROQ_API_KEY` stays in the
 server function's environment. See `SHARED-AI.md`.
 

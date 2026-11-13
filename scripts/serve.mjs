@@ -24,7 +24,7 @@ try {
   console.error(`No index.html in ${root}. Run npm run build before npm run preview.`);
   process.exit(1);
 }
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.deb': 'application/vnd.debian.binary-package', '.txt': 'text/plain; charset=utf-8' };
+const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.flatpak': 'application/vnd.flatpak', '.deb': 'application/vnd.debian.binary-package', '.txt': 'text/plain; charset=utf-8' };
 const server = http.createServer(async (req, res) => {
   try {
     const name = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
@@ -33,7 +33,7 @@ const server = http.createServer(async (req, res) => {
     if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html');
     const body = await readFile(file);
     const headers = { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Content-Length': body.byteLength, 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' };
-    if (file.endsWith('.deb')) headers['Content-Disposition'] = `attachment; filename="${path.basename(file)}"`;
+    if (/\.(deb|flatpak)$/.test(file)) headers['Content-Disposition'] = `attachment; filename="${path.basename(file)}"`;
     res.writeHead(200, headers);
     res.end(req.method === 'HEAD' ? undefined : body);
   } catch {
