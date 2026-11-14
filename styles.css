@@ -138,3 +138,14 @@ figure img[data-dark-src] {
     mask-image: linear-gradient(to right, transparent, #000 35%, #000 70%, transparent);
   }
 }
+
+.hero-description {
+  max-width: 34rem;
+  margin-inline: auto;
+}
+.profile-grid article .icon {
+  margin-bottom: 12px;
+}
+.profile-grid h3 {
+  margin-top: 0;
+}
