@@ -149,3 +149,25 @@ figure img[data-dark-src] {
 .profile-grid h3 {
   margin-top: 0;
 }
+
+/* Leave the celestial scene to the hero and keep the feature screens readable. */
+.hero-app { margin-top: clamp(48px, 7vw, 92px); }
+.app-window, :root[data-theme="dark"] .app-window, .feature-visual img, .trailer-player { box-shadow: none; }
+.feature-panel:not([hidden]) { animation: none; min-height: 0; }
+.feature-copy h3 { margin-top: 0; }
+.check-list li { font-size: .85rem; }
+.feature-visual figcaption, .app-caption, .motion-toggle { font-size: .8rem; }
+.process-list { margin: 0; }
+.process-list li:first-child { padding-top: 0; }
+.profile-grid { margin-top: 24px; }
+.profile-grid article, .profile-grid article:hover { transform: none; border-color: var(--line); }
+.profile-grid p { min-height: 0; }
+.about-section { display: block; }
+.about-copy > p:not(.eyebrow) { max-width: 68ch; }
+.button:hover, .screenshot-trigger:hover { transform: none; }
+
+@media (max-width: 760px) {
+  .profile-grid article, .profile-grid article:first-child, .profile-grid article:last-child { display: block; }
+  .profile-grid article p { padding-right: 0; }
+  .app-caption { gap: 8px; flex-wrap: wrap; }
+}

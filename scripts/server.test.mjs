@@ -42,7 +42,7 @@ test('an occupied port falls back without disturbing its owner', { timeout: 1000
     assert.equal(await (await fetch(`http://127.0.0.1:${port}`)).text(), 'original server');
     const page = await fetch(url);
     assert.equal(page.status, 200);
-    assert.match(await page.text(), /A PC optimizer/);
+    assert.match(await page.text(), /<title>Astreis<\/title>/);
     assert.equal(page.headers.get('cache-control'), 'no-store');
     const head = await fetch(url + '/downloads/' + filename, { method: 'HEAD' });
     assert.equal(head.status, 200);

@@ -14,7 +14,6 @@ function syncTheme() {
   applySiteTheme(theme);
   themeButton.setAttribute('aria-pressed', String(dark));
   themeButton.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`);
-  document.querySelector('.theme-name').textContent = dark ? 'ORBIT' : 'SOLAR';
   document.querySelector('.app-preview-label').textContent = `Astreis · ${dark ? 'Dark' : 'Light'} mode`;
   const lightShot = document.querySelector('.home-light'), darkShot = document.querySelector('.home-dark');
   lightShot.setAttribute('aria-hidden', String(dark));
@@ -47,21 +46,6 @@ themeButton.addEventListener('click', () => {
   }
   try { localStorage.setItem('astreis-theme', theme); } catch { /* Optional preference. */ }
 });
-
-// Progressive enhancement: content is visible without JS or when motion is reduced.
-const revealMotion = matchMedia('(prefers-reduced-motion: reduce)');
-if ('IntersectionObserver' in window && !revealMotion.matches) {
-  const observer = new IntersectionObserver(entries => {
-    for (const entry of entries) if (entry.isIntersecting) {
-      entry.target.classList.add('is-visible'); observer.unobserve(entry.target);
-    }
-  }, { threshold: .08 });
-  document.querySelectorAll('.section-heading, .profile-grid article, .about-copy, .care-strip>div, .download-copy, .install-panel, .trailer-player').forEach(element => {
-    element.classList.add('reveal-target'); observer.observe(element);
-  });
-  root.classList.add('enhanced-motion');
-  revealMotion.addEventListener('change', event => { if (event.matches) { root.classList.remove('enhanced-motion'); observer.disconnect(); } });
-}
 
 const motionButton = document.querySelector('.motion-toggle');
 function syncMotion() {
