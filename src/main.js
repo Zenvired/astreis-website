@@ -103,17 +103,29 @@ tabs.forEach((tab, index) => {
 
 const menuButton = document.querySelector('.menu-toggle');
 const menu = document.querySelector('#mobile-nav');
-function closeMenu() { menu.hidden = true; menuButton.setAttribute('aria-expanded', 'false'); menuButton.setAttribute('aria-label', 'Open navigation'); }
-menuButton.addEventListener('click', () => {
-  const open = menuButton.getAttribute('aria-expanded') !== 'true';
+function setMenuOpen(open) {
   menu.hidden = !open;
   menuButton.setAttribute('aria-expanded', String(open));
   menuButton.setAttribute('aria-label', `${open ? 'Close' : 'Open'} navigation`);
+}
+menuButton.addEventListener('click', () => setMenuOpen(menu.hidden));
+menu.addEventListener('click', event => {
+  if (event.target.closest('a')) setMenuOpen(false);
 });
-menu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
-document.addEventListener('keydown', event => { if (event.key === 'Escape' && !menu.hidden) { closeMenu(); menuButton.focus(); } });
-document.addEventListener('click', event => { if (!menu.hidden && !menu.contains(event.target) && !menuButton.contains(event.target)) closeMenu(); });
-matchMedia('(min-width: 761px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !menu.hidden) {
+    setMenuOpen(false);
+    menuButton.focus();
+  }
+});
+document.addEventListener('click', event => {
+  if (!menu.hidden && !menu.contains(event.target) && !menuButton.contains(event.target)) {
+    setMenuOpen(false);
+  }
+});
+matchMedia('(min-width: 761px)').addEventListener('change', event => {
+  if (event.matches) setMenuOpen(false);
+});
 
 let toastTimer;
 function toast(message) {
