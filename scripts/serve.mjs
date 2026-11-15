@@ -1,5 +1,6 @@
 import http from 'node:http';
-import { readFile, stat, access } from 'node:fs/promises';
+import { open, readFile, realpath, stat } from 'node:fs/promises';
+import { pipeline } from 'node:stream/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -17,29 +18,91 @@ if (args.length > 1 || args.some(arg => arg.startsWith('--'))) {
   console.error('Usage: node scripts/serve.mjs [dist] [--port 4200]');
   process.exit(1);
 }
-const root = path.resolve(project, args[0] || '.');
+const previewDirectory = path.resolve(project, args[0] || '.');
+let root;
 try {
-  await access(path.join(root, 'index.html'));
+  root = await realpath(previewDirectory);
+  await stat(path.join(root, 'index.html'));
 } catch {
-  console.error(`No index.html in ${root}. Run npm run build before npm run preview.`);
+  console.error(`No index.html in ${previewDirectory}. Run npm run build before npm run preview.`);
   process.exit(1);
 }
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.flatpak': 'application/vnd.flatpak', '.deb': 'application/vnd.debian.binary-package', '.txt': 'text/plain; charset=utf-8' };
+const types = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
+  '.woff2': 'font/woff2',
+  '.deb': 'application/vnd.debian.binary-package',
+  '.flatpak': 'application/vnd.flatpak',
+  '.txt': 'text/plain; charset=utf-8',
+};
+const downloads = new Set(['.deb', '.flatpak']);
+
+function insideRoot(file) {
+  return file === root || file.startsWith(root + path.sep);
+}
+
 const server = http.createServer(async (req, res) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.writeHead(405, { Allow: 'GET, HEAD' }).end();
+    return;
+  }
+
+  let name;
   try {
-    const name = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-    let file = path.resolve(root, '.' + name);
-    if (!file.startsWith(root + path.sep) && file !== root) { res.writeHead(403).end(); return; }
-    if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html');
-    const body = await readFile(file);
-    const headers = { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Content-Length': body.byteLength, 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' };
-    if (/\.(deb|flatpak)$/.test(file)) headers['Content-Disposition'] = `attachment; filename="${path.basename(file)}"`;
-    res.writeHead(200, headers);
-    res.end(req.method === 'HEAD' ? undefined : body);
+    name = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
   } catch {
-    res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.writeHead(400).end();
+    return;
+  }
+
+  let handle;
+  try {
+    let file = path.resolve(root, '.' + name);
+    if (!insideRoot(file)) {
+      res.writeHead(403).end();
+      return;
+    }
+    if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html');
+    const resolved = await realpath(file);
+    if (!insideRoot(resolved)) {
+      res.writeHead(403).end();
+      return;
+    }
+
+    if (!(await stat(resolved)).isFile()) throw new Error('Expected a file');
+    handle = await open(resolved, 'r');
+    const { size } = await handle.stat();
+    const extension = path.extname(file);
+    const headers = {
+      'Content-Type': types[extension] || 'application/octet-stream',
+      'Content-Length': size,
+      'X-Content-Type-Options': 'nosniff',
+      'Cache-Control': 'no-store',
+    };
+    if (downloads.has(extension)) {
+      headers['Content-Disposition'] = `attachment; filename="${path.basename(file)}"`;
+    }
+
+    res.writeHead(200, headers);
+    if (req.method === 'HEAD') {
+      res.end();
+      return;
+    }
+    await pipeline(handle.createReadStream(), res);
+  } catch {
+    if (res.destroyed || res.headersSent) {
+      res.destroy();
+      return;
+    }
     const page = await readFile(path.join(root, '404.html')).catch(() => 'Page not found.');
+    res.writeHead(404, { 'Content-Type': types['.html'] });
     res.end(req.method === 'HEAD' ? undefined : page);
+  } finally {
+    await handle?.close();
   }
 });
 let requestedPort = startPort;
